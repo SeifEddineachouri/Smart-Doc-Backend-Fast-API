@@ -70,21 +70,6 @@ if ([string]::IsNullOrWhiteSpace($ServiceToken)) {
     ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1
 }
 
-if ([string]::IsNullOrWhiteSpace($ServiceToken)) {
-    $tokenFileCandidates = @(
-        (Join-Path (Split-Path -Parent $PSScriptRoot) "logs\service-token.txt"),
-        (Join-Path (Split-Path -Parent $PSScriptRoot) "..\logs\service-token.txt")
-    ) | Select-Object -Unique
-
-    foreach ($candidate in $tokenFileCandidates) {
-        if (Test-Path -LiteralPath $candidate) {
-            $ServiceToken = (Get-Content -LiteralPath $candidate -Raw).Trim()
-            if (-not [string]::IsNullOrWhiteSpace($ServiceToken)) {
-                break
-            }
-        }
-    }
-}
 
 if (-not [string]::IsNullOrWhiteSpace($ServiceToken)) {
     $headers["Authorization"] = "Bearer $ServiceToken"
